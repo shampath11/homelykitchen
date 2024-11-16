@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consumer Home - Homely Kitchen</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background-color: #d9534f;
+            color: white;
+        }
+        .navbar a {
+            color: white;
+        }
+        .food-card {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+        .food-card:hover {
+            transform: translateY(-5px);
+        }
+        .food-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+        .search-bar {
+            max-width: 400px;
+            margin: auto;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Homely Kitchen</a>
+            <div class="ml-auto">
+                <a href="profile.html"><img src="../static/images/profile-image.jpg" alt="Profile" class="profile-icon"></a>
+                <a href="index.html" class="btn btn-outline-light btn-sm ms-2">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="alert alert-danger alter-dismissable fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert">
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <!-- Search Bar -->
+    <div class="search-bar text-center mt-3">
+        <form action="{{ url_for('search_food') }}" method="GET">
+            <input type="text" class="form-control" name="query" placeholder="Search for food items..." required>
+        </form>
+    </div>
+
+    <!-- Food Items -->
+    <div class="container">
+        <div class="row">
+            {% for food in food_items %}
+            <div class="col-md-4 mb-4">
+                <div class="food-card">
+                    <a href="{{ url_for('food_detail', food_id=food.id) }}">
+                        <img src="{{ url_for('static', filename='images/' + food.image) }}" alt="{{ food.name }}">
+                    </a>
+                    <div class="p-3">
+                        <h5>{{ food.name }}</h5>
+                        <p class="text-muted">{{ food.location }}</p>
+                        <p>Price: <strong>${{ food.price }}</strong></p>
+                        <p>Rating: <strong>{{ food.rating }}⭐</strong></p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+
+Profile.html:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Homely Kitchen</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .profile-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .profile-container h2 {
+            margin-bottom: 20px;
+            color: #d9534f;
+            text-align: center;
+        }
+        .btn-custom {
+            background-color: #d9534f;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="profile-container">
+            <h2>Your Profile</h2>
+            <form action="consumer_home.html" method="POST">
+                <div class="mb-3">
+                    <label for="first_name" class="form-label">First Name</label>
+                    <input type="text" class="form-control" id="first_name" name="first_name" value="{{ user.first_name }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="last_name" class="form-label">Last Name</label>
+                    <input type="text" class="form-control" id="last_name" name="last_name" value="{{ user.last_name }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="city" class="form-label">City</label>
+                    <input type="text" class="form-control" id="city" name="city" value="{{ user.city }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="address" class="form-label">Address</label>
+                    <textarea class="form-control" id="address" name="address" rows="3" required>{{ user.address }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">New Password (leave blank to keep current)</label>
+                    <input type="password" class="form-control" id="password" name="password">
+                </div>
+                <button type="submit" class="btn btn-custom w-100">Update Profile</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+homemaker_dashboard.html:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homemaker Dashboard - Homely Kitchen</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background-color: #d9534f;
+            color: white;
+        }
+        .navbar a {
+            color: white;
+        }
+        .card {
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Homely Kitchen</a>
+            <div class="ml-auto">
+                <a href="{{ url_for('profile') }}" class="btn btn-outline-light">Profile</a>
+                <a href="index.html" class="btn btn-outline-light ms-2">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-5">
+        <h2 class="text-center">Homemaker Dashboard</h2>
+
+        <!-- Add Food Item Button -->
+        <div class="d-flex justify-content-between mt-4 mb-3">
+            <h4>Your Food Items</h4>
+            <a href="{{ url_for('add_food_item') }}" class="btn btn-primary">Add New Item</a>
+        </div>
+
+        <!-- Food Items List -->
+        <div class="row">
+            {% for item in food_items %}
+            <div class="col-md-4">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='images/' + item.image) }}" class="card-img-top" alt="{{ item.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.name }}</h5>
+                        <p class="card-text">{{ item.description }}</p>
+                        <p><strong>Price:</strong> ${{ item.price }}</p>
+                        <p><strong>Location:</strong> {{ item.location }}</p>
+                        <a href="{{ url_for('edit_food_item', food_id=item.id) }}" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="{{ url_for('delete_food_item', food_id=item.id) }}" class="btn btn-danger btn-sm">Delete</a>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <p class="text-center">No food items found. Add a new item to get started!</p>
+            {% endfor %}
+        </div>
+
+        <!-- Orders Section (Optional) -->
+        <div class="mt-5">
+            <h4>Your Orders</h4>
+            <p>This section will display consumer orders related to your food items.</p>
+            <!-- Implement order list here if an Order model is available -->
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
